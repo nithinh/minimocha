@@ -44,6 +44,14 @@ testSuite('True Or False? ', () => {
   });
 
   testSuite('falsy => ', () => {
+
+    test('!NaN === true', () => {
+      assert.equal(!NaN, true);
+    });
+    test('!(empty string) === true', () => {
+      assert.equal(!'', true);
+    });
+
     testSuite('undefined & nil', () => {
       test('undefined', () => {
         assert.equal(!(void 0), true);
@@ -51,13 +59,6 @@ testSuite('True Or False? ', () => {
       test('null', () => {
         assert.equal(!null, true);
       });
-    });
-
-    test('!NaN === true', () => {
-      assert.equal(!NaN, true);
-    });
-    test('!(empty string) === true', () => {
-      assert.equal(!'', true);
     });
   });
 });

@@ -14,9 +14,9 @@ const indentedTitle = ctxt =>
   `${stack.map(() => '   ').join('')}${ctxt}`;
 
 const newTop = title =>
-  ({ title, tests: [], setup: [], teardown: [], testSuites: [] });
+  ({ title, setup: [], teardown: [],testSet:[] });
 
-const execTop = () => 'setup tests testSuites teardown'.split(' ')
+const execTop = () => 'setup testSet teardown'.split(' ')
   .forEach(key => stackTop()[key].forEach(activity[key]));
 
 const execTestSuite = (title, testSuiteFn) => {
@@ -59,19 +59,26 @@ const reportTests = (fn, title) => {
 
 activity.setup = fn => fn.call(ctx);
 activity.teardown = fn => fn.call(ctx);
+activity.testSet = ([title,testFn,type]) => {
+  if(type == 'testSuites') {
+    execTestSuite(title, testFn);
+  } else if(type == 'tests') {
+    reportTests(testFn, title);
+  }
+}
 activity.testSuites = ([title, testFn]) =>
   execTestSuite(title, testFn);
 activity.tests = ([title, testFn]) =>
   reportTests(testFn, title);
 
-export const test = (desc, fn) => spush('tests', [desc, fn]);
+export const test = (desc, fn) => spush('testSet', [desc, fn,'tests']);
 export const testSuite = (title, testfn) => {
   if (isEmptyStack()) {
     execTestSuite(title, testfn);
     return;
   }
 
-  spush('testSuites', [title, testfn]);
+  spush('testSet', [title, testfn, 'testSuites']);
 };
 export const setup = spush.bind(null, 'setup');
 export const teardown = spush.bind(null, 'teardown');
