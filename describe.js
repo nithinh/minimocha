@@ -29,13 +29,32 @@ const execTestSuite = (title, testSuiteFn) => {
 
 const reportTests = (fn, title) => {
   const desc = indentedTitle(title);
+  
+  if(fn.length >= 1) {
+    /*Async tests*/
+    var done = function(err) {
+      if(err) {
+        failure(desc,err.message);
+      } else {
+        success(desc);
+      }
+    }
+    try {
+      fn.call(ctx,done)
+    } catch(e) {
+      failure(desc,e.message);
+    }
 
-  try {
-    fn.call(ctx);
-    success(desc);
-  } catch (e) {
-    failure(desc, e.message);
+    /*End async tests*/
+  } else {
+      try {
+      fn.call(ctx);
+      success(desc);
+    } catch (e) {
+      failure(desc, e.message);
+    }
   }
+  
 };
 
 activity.setup = fn => fn.call(ctx);

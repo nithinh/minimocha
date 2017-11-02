@@ -21,6 +21,18 @@ testSuite('True Or False? ', () => {
     });
   });
 
+  testSuite('async', () => {
+    test('setTimeout', (done) => {
+      setTimeout(function(){
+        try {
+          assert.equal(!![], true);
+          done(); // success case
+        } catch (err) {
+          done(err); // error case
+        }
+      },200);
+    });
+  });
   testSuite('truthy => ', () => {
     test('empty array', () => {
       assert.equal(!![0], true);
@@ -39,10 +51,6 @@ testSuite('True Or False? ', () => {
       test('null', () => {
         assert.equal(!null, true);
       });
-    });
-
-    test('should test ![] === true ', () => {
-      assert.equal(![], true);
     });
 
     test('!NaN === true', () => {
